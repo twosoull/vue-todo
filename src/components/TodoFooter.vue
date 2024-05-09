@@ -1,12 +1,16 @@
 <template>
     <div>
-        footer
+        <span class="clearAllBtn" v-on:click="clearTodo">Clear All</span>
     </div>
 </template>
 
 <script>
 export default {
-
+  methods : {
+    clearTodo : function(){
+      this.$emit('clearTodo');
+    }
+  }
 }
 </script>
 

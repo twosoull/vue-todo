@@ -1,35 +1,27 @@
 <template>
     <div>
-        <ul>
-            <li v-for="(todoItem,i) in todoItems" v-bind:key="i"
-            class="shadow">{{ todoItem }}
+      <TransitionGroup name="list" tag="ul">
+          <li v-for="(todoItem,i) in propData" v-bind:key="i"
+            class="shadow">{{ todoItem.item }}
             <button v-on:click="removeTodo(todoItem, i)" class="removeBtn">
-                <i class="removeBtn fas fa-trash-alt"></i>
+              <i class="removeBtn fas fa-trash-alt"></i>
             </button>
-        </li>
-        </ul>
+            <button v-on:click="toggleClear(todoItem,i)">clear</button>
+            <span v-if="todoItem.completed">good!</span>
+          </li>
+      </TransitionGroup>
     </div>
 </template>
 
 <script>
 export default {
-    data : function(){
-        return{
-            todoItems : []
-        }
-    },
-    created : function(){
-        if(localStorage.length > 0){
-            console.log(localStorage.length);            for(var i = 0; i < localStorage.length; i++){
-                this.todoItems.push(localStorage.key(i))
-                console.log(localStorage.key(i));   
-            }
-        }
-    },
+    props : ['propData'],
     methods : {
         removeTodo : function(todoItem,index){
-            localStorage.removeItem(todoItem);
-            this.todoItems.splice(index, 1);
+          this.$emit('removeItem',todoItem,index);
+        },
+        toggleClear : function(todoItem,index){
+          this.$emit('toggleItem',todoItem,index);
         }
     }
 }
@@ -68,5 +60,12 @@ li {
 .removeBtn {
   margin-left: auto;
   color: #de4343;
+}
+.list-enter-active, .list-leave-active{
+  transition : all 1s;
+}
+.list-enter-from, .list-leave-to{
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>

@@ -4,26 +4,56 @@
         <span class="addContainer" v-on:click="addTodo">
             <i class="addBtn fas fa-plus" aria-hidden="true"></i>
         </span>
+        <!-- use the modal component, pass in the prop -->
+        <Modal v-if="showModal" @close="showModal = false">
+        
+            <!--
+        you can use custom content here to overwrite
+        default content
+        -->
+        <template v-slot:header>
+            경고
+            <button @click="close">닫기</button>
+        </template>
+        <template v-slot:body>
+            무언가를 입력하세요.
+        </template>
+        <template v-slot:footer>
+            d
+        </template>
+        </Modal>
     </div>
 </template>
 
 <script>
+import Modal from './common/Modal.vue';
+
 export default {
     data : function(){
         return{
-            newTodoItem : ""
+            newTodoItem : "",
+            showModal : false
         }
 
     },
     methods : {
         addTodo: function(){
-            //저장하는 로직
-            localStorage.setItem(this.newTodoItem,this.newTodoItem);
-            this.clearInput();
+            if(this.newTodoItem != ''){
+                this.$emit('addTodoItem',this.newTodoItem);
+                this.clearInput();
+            }else{
+                this.showModal = !this.showModal;
+            }
         },
         clearInput : function(){
             this.newTodoItem = '';
+        },
+        close : function(){
+            this.showModal = !this.showModal;
         }
+    },
+    components : {
+        Modal : Modal
     }
 }
 </script>
