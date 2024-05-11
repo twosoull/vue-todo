@@ -1,13 +1,13 @@
 <template>
     <div>
       <TransitionGroup name="list" tag="ul">
-          <li v-for="(todoItem,i) in this.todoItems" 
-              v-bind:key="i"
+          <li v-for="(todoItem,index) in storedTodoItems" 
+              v-bind:key="index"
               class="shadow">{{ todoItem.item }}
-            <button v-on:click="removeTodo(todoItem, i)" class="removeBtn">
+            <button v-on:click="removeTodo({todoItem, index})" class="removeBtn"> <!--1개의 인자기 때문에 오브젝트로 묶어서 보낸다.-->
               <i class="removeBtn fas fa-trash-alt"></i>
             </button>
-            <button v-on:click="toggleClear(todoItem,i)">clear</button>
+            <button @click="toggleClear({todoItem, index})">clear</button>
             <span v-if="todoItem.completed">good!</span>
           </li>
       </TransitionGroup>
@@ -15,23 +15,23 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
     methods : {
-        removeTodo(todoItem,index){
-          this.$store.commit('removeOneItem',{todoItem, index});
-        },
-        toggleClear(todoItem,index){
-          this.$store.commit('toggelOneItem', {todoItem, index});
-        }
+        ...mapMutations({
+          removeTodo : 'removeOneItem',
+          toggleClear : 'toggelOneItem',
+        }), 
+        //컴포넌트내의 함수명, 스토어 함수명
+        //인자를 입력하지 않아도 암묵적으로 보낸다.
     },
     computed : {
       // todoItems(){
       //   return this.$store.getters.storedTodoItems
       // }
-      ...mapState(['todoItems'])
-      //...mapGetters(['storedTodoItems'])
+      //...mapState(['todoItems'])
+      ...mapGetters(['storedTodoItems'])
       
       //
       // ...mapGetters({
