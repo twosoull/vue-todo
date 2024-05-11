@@ -16,6 +16,11 @@ export const store = createStore({
     state: {
         todoItems : storage.item()
     },
+    getters: {
+        storedTodoItems(state){
+            return state.todoItems
+        }
+    },
     mutations : {
         addOneItem(state,todoItem){
             var obj = {completed : false , item : todoItem};
@@ -27,8 +32,6 @@ export const store = createStore({
             state.todoItems.splice(payload.index, 1);
         },
         toggelOneItem(state, payload){
-            console.log(payload.index);
-            console.log(payload.todoItem);
             state.todoItems[payload.index].completed = !state.todoItems[payload.index].completed;
             localStorage.removeItem(payload.todoItem.item);
             localStorage.setItem(payload.todoItem.item,JSON.stringify(payload.todoItem));

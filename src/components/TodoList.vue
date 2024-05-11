@@ -1,8 +1,9 @@
 <template>
     <div>
       <TransitionGroup name="list" tag="ul">
-          <li v-for="(todoItem,i) in this.$store.state.todoItems" v-bind:key="i"
-            class="shadow">{{ todoItem.item }}
+          <li v-for="(todoItem,i) in this.todoItems" 
+              v-bind:key="i"
+              class="shadow">{{ todoItem.item }}
             <button v-on:click="removeTodo(todoItem, i)" class="removeBtn">
               <i class="removeBtn fas fa-trash-alt"></i>
             </button>
@@ -14,17 +15,28 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+
 export default {
     methods : {
         removeTodo(todoItem,index){
-          //this.$emit('removeItem',todoItem,index);
           this.$store.commit('removeOneItem',{todoItem, index});
         },
         toggleClear(todoItem,index){
-          //this.$emit('toggleItem',todoItem,index);
-          console.log(index);
           this.$store.commit('toggelOneItem', {todoItem, index});
         }
+    },
+    computed : {
+      // todoItems(){
+      //   return this.$store.getters.storedTodoItems
+      // }
+      ...mapState(['todoItems'])
+      //...mapGetters(['storedTodoItems'])
+      
+      //
+      // ...mapGetters({
+      //   todoItems : 'storedTodoItems'
+      // })
     }
 }
 </script>
